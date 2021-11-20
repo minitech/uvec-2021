@@ -1,0 +1,18 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    align-items: center;
+    background-color: #222;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+}
+
+#canvas {
+    display: block;
+    width: 800px;
+    height: 600px;
+    background-color: black;
+}
