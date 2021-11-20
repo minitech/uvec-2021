@@ -3,7 +3,7 @@ import io from './socket.io.esm.min.js';
 // const socket = io();
 
 let socket = io.connect('//' + document.domain + ':' + location.port);
-let roomId = $(location).attr('href').split('/')[4];
+let roomId = location.href.split('/')[4];
 
 socket.on('connect', function () {
     console.log("connected!");
