@@ -16,7 +16,9 @@ const MIDLINE = HEIGHT / 2 - 0.5;
 const INITIAL_SIZE = 35;
 const INITIAL_WALL_OFFSET = 100;
 const COLOR_P1 = '#0cf';
+const COLOR_P1_FIELD = '#024';
 const COLOR_P2 = '#cf0';
+const COLOR_P2_FIELD = '#240';
 const FRICTION_DECELERATION = 0.2;
 const ACCELERATION = 0.6;
 const MAX_SPEED = 8;
@@ -54,6 +56,19 @@ const drawPlayer = (p) => {
     g.beginPath();
 };
 
+const drawCursor = () => {
+    g.arc(cursorX, cursorY, 2, 0, 2 * Math.PI);
+    g.fillStyle = 'white';
+    g.fill();
+    g.beginPath();
+
+    g.arc(cursorX, cursorY, 12, 0, 2 * Math.PI);
+    g.lineWidth = 2;
+    g.strokeStyle = 'white';
+    g.stroke();
+    g.beginPath();
+};
+
 const fixedUpdate = () => {
     const forceX = -((keys & KEY_LEFT) !== 0) + ((keys & KEY_RIGHT) !== 0);
     const forceY = -((keys & KEY_UP) !== 0) + ((keys & KEY_DOWN) !== 0);
@@ -81,6 +96,22 @@ const fixedUpdate = () => {
 
     p2.x += p2.velocityX;
     p2.y += p2.velocityY;
+
+    if (p2.x - p2.size < 0) {
+        p2.x = p2.size;
+        p2.velocityX = 0;
+    } else if (p2.x + p2.size > WIDTH) {
+        p2.x = WIDTH - p2.size;
+        p2.velocityX = 0;
+    }
+
+    if (p2.y < HEIGHT / 2) {
+        p2.y = HEIGHT / 2;
+        p2.velocityY = 0;
+    } else if (p2.y + p2.size > HEIGHT) {
+        p2.y = HEIGHT - p2.size;
+        p2.velocityY = 0;
+    }
 };
 
 const FIXED_STEP = 16;
@@ -101,12 +132,21 @@ const draw = (t) => {
     update(t - last);
     last = t;
 
+    p2.fireDirection = Math.atan2(cursorY - p2.y, cursorX - p2.x);
+
     g.clearRect(0, 0, WIDTH, HEIGHT);
-    g.fillStyle = 'white';
-    g.fillRect(0, MIDLINE, WIDTH, 1);
+
+    g.globalCompositeOperation = 'lighten';
+    g.fillStyle = COLOR_P1_FIELD;
+    g.fillRect(0, 0, WIDTH, MIDLINE + 30);
+    g.fillStyle = COLOR_P2_FIELD;
+    g.fillRect(0, MIDLINE - 30, WIDTH, MIDLINE + 30);
+    g.globalCompositeOperation = 'source-over';
 
     drawPlayer(p1);
     drawPlayer(p2);
+
+    drawCursor();
 
     requestAnimationFrame(draw);
 };
@@ -171,4 +211,32 @@ window.addEventListener('keyup', (e) => {
     }
 
     e.preventDefault();
+});
+
+let cursorX = WIDTH / 2;
+let cursorY = HEIGHT / 2;
+
+document.addEventListener('mousemove', (e) => {
+    cursorX += e.movementX;
+    cursorY += e.movementY;
+
+    if (cursorX < 0) {
+        cursorX = 0;
+    } else if (cursorX > WIDTH) {
+        cursorX = WIDTH;
+    }
+
+    if (cursorY < 0) {
+        cursorY = 0;
+    } else if (cursorY > HEIGHT) {
+        cursorY = HEIGHT;
+    }
+});
+
+canvas.addEventListener('click', () => {
+    canvas.requestPointerLock();
+});
+
+socket.on('position', (p) => {
+    console.log(p);
 });
