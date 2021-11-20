@@ -1,15 +1,20 @@
 import io from './socket.io.esm.min.js';
 
-// const socket = io();
+const socket = io.connect('//' + document.domain + ':' + location.port);
+const roomId = location.href.split('/')[4];
+const key = Math.random();
 
-let socket = io.connect('//' + document.domain + ':' + location.port);
-let roomId = location.href.split('/')[4];
-
-socket.on('connect', function () {
+socket.on('connect', () => {
     console.log("connected!");
     socket.emit('join_room', {
         'room': roomId
     });
+});
+
+socket.on('move', (data) => {
+    if (data.room === roomId && data.key !== key) { // XXX
+        Object.assign(p1, data);
+    }
 });
 
 const canvas = document.getElementById('canvas');
@@ -132,10 +137,22 @@ let last = -1;
 const update = (dt) => {
     res += dt;
 
-    while (res > FIXED_STEP) {
+    if (res < FIXED_STEP) {
+        return;
+    }
+
+    socket.emit('move', {
+        room: roomId,
+        key: key,
+        x: p2.x,
+        y: HEIGHT - p2.y,
+        fireDirection: p2.fireDirection,
+    });
+
+    do {
         res -= FIXED_STEP;
         fixedUpdate();
-    }
+    } while (res >= FIXED_STEP);
 };
 
 const draw = (t) => {

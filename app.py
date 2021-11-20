@@ -35,7 +35,10 @@ def join(msg):
         if socket.sid == request.sid:
             socket.room = msg['room']
     join_room(msg['room'])
-    
+
+@socketio.on('move')
+def handle_move(data):
+    emit('move', data, broadcast=True, room=data['room'])
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, host='0.0.0.0', port=80)
