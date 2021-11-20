@@ -1,9 +1,6 @@
 import socketio
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
-from engineio.payload import Payload
-
-Payload.max_decode_packets = 50
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -41,7 +38,7 @@ def join(msg):
 
 @socketio.on('move')
 def handle_move(data):
-    emit('move', data, broadcast=True, room=data['room'])
+    emit('move', data, broadcast=True, include_self=False, room=data['room'])
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=80)
