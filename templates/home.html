@@ -3,18 +3,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static', filename='home.css') }}">
+
 <title>Game</title>
 
-<div class="create-room">
-    <form>
-        <div class="form-group">
-            <input type="text" class="roomId">
-        </div>
-        <div class="form-group">
-            <button type="button" class="createRoom">Create Room</button>
-        </div>
-    </form>
+<div class="container">
+    <h1>Shooting Game</h1>
+    <div class="create-room">
+        <form>
+            <div class="form-group">
+                <button type="button" class="createRoom">Create Room</button>
+            </div>
+        </form>
+    </div>
 </div>
+
 
 <script>
     function makeID(length) {
@@ -28,12 +31,7 @@
     }
     
     let p2btn = document.querySelector(".createRoom");
-    let roomIdInput = document.querySelector(".roomId");
     p2btn.addEventListener("click", function() {
-        roomIdInput.value = window.location.href + "game/" + makeID(6);
-    });
-    
-    roomIdInput.addEventListener('click', function() {
-        this.select();
+        location.replace(window.location.href + "game/" + makeID(6))
     });
 </script>

@@ -41,4 +41,5 @@ def handle_move(data):
     emit('move', data, broadcast=True, include_self=False, room=data['room'])
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=80)
+    # socketio.run(app, host='0.0.0.0', port=80)
+    app.run(debug=True)
