@@ -1,6 +1,16 @@
 import io from './socket.io.esm.min.js';
 
-const socket = io();
+// const socket = io();
+
+let socket = io.connect('//' + document.domain + ':' + location.port);
+let roomId = $(location).attr('href').split('/')[4];
+
+socket.on('connect', function () {
+    console.log("connected!");
+    socket.emit('join_room', {
+        'room': roomId
+    });
+});
 
 const canvas = document.getElementById('canvas');
 

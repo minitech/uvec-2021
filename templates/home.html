@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Game</title>
+
+<div class="create-room">
+    <form>
+        <div class="form-group">
+            <input type="text" class="roomId">
+        </div>
+        <div class="form-group">
+            <button type="button" class="createRoom">Create Room</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function makeID(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+    
+    let p2btn = document.querySelector(".createRoom");
+    let roomIdInput = document.querySelector(".roomId");
+    p2btn.addEventListener("click", function() {
+        roomIdInput.value = window.location.href + "game/" + makeID(6);
+    });
+    
+    roomIdInput.addEventListener('click', function() {
+        this.select();
+    });
+</script>
