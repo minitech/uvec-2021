@@ -1,6 +1,9 @@
 import socketio
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, send, emit, join_room, leave_room
+from engineio.payload import Payload
+
+Payload.max_decode_packets = 50
 
 app = Flask(__name__)
 socketio = SocketIO(app)
