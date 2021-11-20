@@ -24,6 +24,7 @@ canvas.height *= devicePixelRatio;
 
 const g = canvas.getContext('2d');
 g.scale(devicePixelRatio, devicePixelRatio);
+g.font = '32px sans-serif';
 
 const WIDTH = 800;
 const HEIGHT = 600;
@@ -205,6 +206,11 @@ const update = (dt) => {
         return;
     }
 
+    do {
+        res -= FIXED_STEP;
+        fixedUpdate();
+    } while (res > FIXED_STEP);
+
     socket.emit('move', {
         room: roomId,
         key: key,
@@ -217,11 +223,6 @@ const update = (dt) => {
         projVelY: p2.projVelY,
         health: p2.health,
     });
-
-    do {
-        res -= FIXED_STEP;
-        fixedUpdate();
-    } while (res > FIXED_STEP);
 };
 
 const draw = (t) => {
@@ -231,6 +232,16 @@ const draw = (t) => {
     p2.fireDirection = Math.atan2(cursorY - p2.y, cursorX - p2.x);
 
     g.clearRect(0, 0, WIDTH, HEIGHT);
+
+    if (p2.health === 0) {
+        g.fillText('You win! :)', WIDTH / 2 - 50, HEIGHT / 2 + 12);
+        return;
+    }
+
+    if (p1.health === 0) {
+        g.fillText('You lose. :(', WIDTH / 2 - 50, HEIGHT / 2 + 12);
+        return;
+    }
 
     g.globalCompositeOperation = 'lighten';
     g.fillStyle = COLOR_P1_FIELD;
