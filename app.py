@@ -1,12 +1,13 @@
+import socketio
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/', methods=['GET'])
 def home():
-    return render_template('home.html')
+    return render_template('index.html')
 
 # Keep track of connected users
 class Socket:
@@ -26,4 +27,4 @@ def add_socket():
     
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
